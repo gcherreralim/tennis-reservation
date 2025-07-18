@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel - BF Homes QC Tennis Reservations</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <div class="flex justify-end space-x-4 p-4">
+      <a href="{{ url_for('index') }}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded">
+          Back to Site
+      </a>
+      <a href="{{ url_for('logout') }}" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-1 px-3 rounded">
+          Logout
+      </a>
+  </div>
+</head>
+<body class="bg-black text-gray-800 font-sans">
+  <div class="max-w-6xl mx-auto py-10 px-4">
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold">Admin Panel</h1>
+      <a href="{{ url_for('logout') }}" class="text-sm text-blue-600 hover:underline">Logout</a>
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+      <table class="min-w-full text-sm text-left border">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="px-4 py-3 border">Date</th>
+            <th class="px-4 py-3 border">Time Slot</th>
+            <th class="px-4 py-3 border">Name</th>
+            <th class="px-4 py-3 border">Contact</th>
+            <th class="px-4 py-3 border">Coaching</th>
+            <th class="px-4 py-3 border">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for res in reservations %}
+            <tr class="border-t hover:bg-gray-100">
+              <td class="px-4 py-2 border">{{ res.date.strftime('%Y-%m-%d') }}</td>
+              <td class="px-4 py-2 border">{{ res.time_slot }}</td>
+              <td class="px-4 py-2 border">{{ res.name }}</td>
+              <td class="px-4 py-2 border">{{ res.contact_number }}</td>
+              <td class="px-4 py-2 border">{{ 'Yes' if res.with_coaching else 'No' }}</td>
+              <td class="px-4 py-2 border">
+                <a href="{{ url_for('delete', res_id=res.id) }}" class="text-red-600 hover:underline text-sm">Delete</a>
+                <form action="{{ url_for('edit_reservation_modal') }}" method="POST">
+                    <input type="hidden" name="res_id" value="{{ res.id }}">
+                    
+                    <label>Date:</label>
+                    <input type="date" name="date" required value="{{ res.date.isoformat() }}">
+
+                    <label>Time Slot:</label>
+                    <select name="time_slot">
+                        {% for slot in time_slots %}
+                            <option value="{{ slot }}" {% if res.time_slot == slot %}selected{% endif %}>{{ slot }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <label>Name:</label>
+                    <input type="text" name="name" required value="{{ res.name }}">
+
+                    <label>Contact:</label>
+                    <input type="text" name="contact" required value="{{ res.contact_number }}">
+
+                    <label>With Coaching?</label>
+                    <select name="with_coaching">
+                        <option value="yes" {% if res.with_coaching %}selected{% endif %}>Yes</option>
+                        <option value="no" {% if not res.with_coaching %}selected{% endif %}>No</option>
+                    </select>
+
+                    <button type="submit">Update</button>
+                </form>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="6" class="text-center text-gray-500 py-4">No reservations found.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

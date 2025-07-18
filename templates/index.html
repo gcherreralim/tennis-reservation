@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BF Homes QC Tennis Court Reservation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <div class="flex justify-end space-x-4 p-4">
+        {% if session.admin %}
+            <a href="{{ url_for('admin') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">
+                Admin Panel
+            </a>
+            <a href="{{ url_for('logout') }}" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-1 px-3 rounded">
+                Logout
+            </a>
+        {% else %}
+            <a href="{{ url_for('login') }}" class="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-3 rounded">
+                Admin Login
+            </a>
+        {% endif %}
+      </div>
+</head>
+<body class="bg-black text-gray-800 p-6">
+    <div class="max-w-6xl mx-auto bg-white p-6 rounded shadow">
+        <h1 class="text-3xl font-bold mb-4">Tennis Court Reservation</h1>
+
+        {% if error_message %}
+            <p class="text-red-600 mb-4">{{ error_message }}</p>
+        {% endif %}
+
+        <!-- Reservation Form -->
+        <form method="POST" class="space-y-4 bg-gray-50 p-4 rounded">
+            <div>
+                <label class="block font-medium">Full Name:</label>
+                <input type="text" name="name" required class="w-full mt-1 p-2 border rounded">
+            </div>
+            <div>
+                <label class="block font-medium">Contact Number:</label>
+                <input type="text" name="contact" required class="w-full mt-1 p-2 border rounded">
+            </div>
+            <div>
+                <label class="block font-medium">Date:</label>
+                <input type="date" name="date" value="{{ today_str }}" class="w-full mt-1 p-2 border rounded"
+                       min="{{ today_str }}" required>
+            </div>
+            <div>
+                <label class="block font-medium">Time Slot:</label>
+                <select name="time_slot" class="w-full mt-1 p-2 border rounded" required>
+                    {% for slot in time_slots %}
+                        {% set slot_map = slot_available_map.get(selected_date.isoformat(), {}) %}
+                        {% if slot_map.get(slot, True) %}
+                            <option value="{{ slot }}">{{ slot }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="block font-medium">With Coaching?</label>
+                <select name="with_coaching" class="w-full mt-1 p-2 border rounded">
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+            <button type="submit" class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800">
+                Reserve
+            </button>
+        </form>
+
+        <!-- Week Navigation -->
+        <div class="flex justify-between items-center my-6">
+            <a href="{{ url_for('index', week_offset=week_offset - 1) }}"
+               class="px-3 py-1 border rounded bg-gray-300 text-gray-800 hover:bg-gray-400">← Prev Week</a>
+            <h2 class="text-xl font-semibold">Week of {{ dates[0].strftime("%B %d, %Y") }}</h2>
+            <a href="{{ url_for('index', week_offset=week_offset + 1) }}"
+               class="px-3 py-1 border rounded bg-gray-300 text-gray-800 hover:bg-gray-400">Next Week →</a>
+        </div>
+
+        <!-- Calendar Table -->
+        <div class="overflow-x-auto">
+            <table class="table-auto w-full border border-gray-300">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="border p-2">Time</th>
+                        {% for d in dates %}
+                            <th class="border p-2">{{ d.strftime('%a %m/%d') }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for slot in time_slots %}
+                        <tr>
+                            <td class="border p-1 font-medium text-center">{{ slot }}</td>
+                            {% for d in dates %}
+                                {% set key = (d.isoformat(), slot) %}
+                                {% set res = reservations_dict.get(key) %}
+                                {% if res %}
+                                    <td class="border p-2 bg-red-200 text-black text-center">
+                                        {% if is_admin %}
+                                            {{ res.name }}
+                                            {% if res.with_coaching %}
+                                                *📘
+                                            {% endif %}
+                                            <br>RESERVED
+                                        {% else %}
+                                            {{ res.masked_name }}
+                                            {% if res.with_coaching %}
+                                                *📘
+                                            {% endif %}
+                                            <br>RESERVED
+                                        {% endif %}
+                                    </td>
+                                {% else %}
+                                    <td class="border p-2 text-green-700 text-center">AVAILABLE</td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
