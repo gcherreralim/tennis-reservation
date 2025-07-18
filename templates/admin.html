@@ -10,7 +10,7 @@
 <body class="bg-lime-900 text-gray-800 font-sans">
   <div class="max-w-6xl mx-auto py-10 px-4">
     <div class="flex justify-between items-center mb-8">
-      <h1 class="text-3xl font-bold">Admin Panel</h1>
+      <h1 class="text-3xl font-bold text-white">BF Homes QC Tennis - Admin Panel</h1>
       <div class="flex justify-end space-x-4 p-4">
           <a href="{{ url_for('index') }}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded">
               Back to Site
@@ -25,11 +25,14 @@
       <table class="min-w-full text-sm text-left border">
         <thead class="bg-gray-200">
           <tr>
-            <th class="px-4 py-3 border">Date</th>
+            {% set current_sort = request.args.get('sort', 'date') %}
+            <th class="px-4 py-3 border {% if current_sort == 'date' %}bg-yellow-100{% endif %}"><a href="{{ url_for('admin', sort='date') }}" class="hover:underline">Date</a></th>
             <th class="px-4 py-3 border">Time Slot</th>
-            <th class="px-4 py-3 border">Name</th>
+            {% set current_sort = request.args.get('sort', 'name') %}
+            <th class="px-4 py-3 border {% if current_sort == 'name' %}bg-yellow-100{% endif %}"><a href="{{ url_for('admin', sort='name') }}" class="hover:underline">Name</a></th>
             <th class="px-4 py-3 border">Contact</th>
-            <th class="px-4 py-3 border">Coaching</th>
+            {% set current_sort = request.args.get('sort', 'coaching') %}
+            <th class="px-4 py-3 border {% if current_sort == 'coaching' %}bg-yellow-100{% endif %}"><a href="{{ url_for('admin', sort='coaching') }}" class="hover:underline">Coaching</a></th>
             <th class="px-4 py-3 border">Action</th>
           </tr>
         </thead>

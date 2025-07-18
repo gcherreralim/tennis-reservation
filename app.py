@@ -139,6 +139,15 @@ def admin():
     time_slots = get_time_slots()
     reserved_slots = {(r.date.isoformat(), r.time_slot) for r in reservations}
 
+    sort = request.args.get("sort", "date")
+
+    if sort == "name":
+        reservations = Reservation.query.order_by(Reservation.name).all()
+    elif sort == "coaching":
+        reservations = Reservation.query.order_by(Reservation.with_coaching.desc()).all()
+    else:  # Default to sorting by date
+        reservations = Reservation.query.order_by(Reservation.date, Reservation.time_slot).all()
+
     return render_template("admin.html", reservations=upcoming, completed=completed, time_slots=time_slots, reserved_slots=reserved_slots, today=today, now=now)
 
 @app.route("/edit_modal", methods=["POST"])
