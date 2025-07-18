@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <title>BF Homes QC Tennis Court Reservation</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <div class="flex justify-end space-x-4 p-4">
+</head>
+<body class="bg-black text-gray-800 p-6">
+    <div class="max-w-6xl mx-auto bg-white p-6 rounded shadow">
+        <h1 class="text-3xl font-bold mb-4">BF Homes QC Tennis Court Reservation</h1>
+        <div class="flex justify-end space-x-4 p-4">
         {% if session.admin %}
             <a href="{{ url_for('admin') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">
                 Admin Panel
@@ -18,10 +22,6 @@
             </a>
         {% endif %}
       </div>
-</head>
-<body class="bg-black text-gray-800 p-6">
-    <div class="max-w-6xl mx-auto bg-white p-6 rounded shadow">
-        <h1 class="text-3xl font-bold mb-4">Tennis Court Reservation</h1>
 
         {% if error_message %}
             <p class="text-red-600 mb-4">{{ error_message }}</p>

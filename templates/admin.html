@@ -5,20 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Panel - BF Homes QC Tennis Reservations</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <div class="flex justify-end space-x-4 p-4">
-      <a href="{{ url_for('index') }}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded">
-          Back to Site
-      </a>
-      <a href="{{ url_for('logout') }}" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-1 px-3 rounded">
-          Logout
-      </a>
-  </div>
 </head>
 <body class="bg-black text-gray-800 font-sans">
   <div class="max-w-6xl mx-auto py-10 px-4">
     <div class="flex justify-between items-center mb-8">
       <h1 class="text-3xl font-bold">Admin Panel</h1>
-      <a href="{{ url_for('logout') }}" class="text-sm text-blue-600 hover:underline">Logout</a>
+      <div class="flex justify-end space-x-4 p-4">
+          <a href="{{ url_for('index') }}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded">
+              Back to Site
+          </a>
+          <a href="{{ url_for('logout') }}" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-1 px-3 rounded">
+              Logout
+          </a>
+      </div>
     </div>
 
     <div class="bg-white shadow-md rounded-lg overflow-hidden">
